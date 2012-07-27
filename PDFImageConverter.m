@@ -17,6 +17,9 @@ static CGFloat const kDefaultDPI = 72;
 
 + (NSData *)convertImageToPDF:(UIImage *)image withDPI:(CGFloat)DPI{
     CGSize A4PageSize = CGSizeMake(8.5 * kDefaultDPI, 11 * kDefaultDPI);
+    if(image.size.width > image.size.height){
+        A4PageSize = CGSizeMake(11 * kDefaultDPI, 8.5 * kDefaultDPI);
+    }
     return [PDFImageConverter convertImageToPDF:image withDPI:DPI andMaxSize:A4PageSize];
 }
 
