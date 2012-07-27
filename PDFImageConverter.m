@@ -14,17 +14,17 @@
     return [PDFImageConverter convertImageToPDF:image withResolution:96];
 }
 
-+ (NSData *)convertImageToPDF:(UIImage *)image withResolution:(double)resolution{
-    return [PDFImageConverter convertImageToPDF:image withHorizontalResolution:resolution verticalResolution:resolution];
++ (NSData *)convertImageToPDF:(UIImage *)image withResolution:(CGFloat)resolution{
+    return [PDFImageConverter convertImageToPDF:image withResolutionSize:CGSizeMake(resolution, resolution)];
 }
 
-+ (NSData *)convertImageToPDF:(UIImage *)image withHorizontalResolution:(double)horzRes verticalResolution:(double)vertRes{
-	if((horzRes <= 0)|| (vertRes <= 0)){
++ (NSData *)convertImageToPDF:(UIImage *)image withResolutionSize:(CGSize)resolutionSize{
+	if((resolutionSize.width <= 0)|| (resolutionSize.height <= 0)){
         return nil;
     }
     
-    double pageWidth = image.size.width * image.scale * 72 / horzRes;
-    double pageHeight = image.size.height * image.scale * 72 / vertRes;
+    CGFloat pageWidth = image.size.width * image.scale * 72 / resolutionSize.width;
+    CGFloat pageHeight = image.size.height * image.scale * 72 / resolutionSize.height;
     
     NSMutableData *pdfFile = [[NSMutableData alloc] init];
     CGDataConsumerRef pdfConsumer = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)pdfFile);
@@ -41,20 +41,20 @@
     return pdfFile;
 }
 
-+ (NSData *)convertImageToPDF:(UIImage *)image withResolution:(double)resolution maxBoundsRect:(CGRect)boundsRect pageSize:(CGSize)pageSize{
++ (NSData *)convertImageToPDF:(UIImage *)image withResolution:(CGFloat)resolution maxBoundsRect:(CGRect)boundsRect pageSize:(CGSize)pageSize{
     if(resolution <= 0){
         return nil;
     }
     
-    double imageWidth = image.size.width * image.scale * 72 / resolution;
-    double imageHeight = image.size.height * image.scale * 72 / resolution;
+    CGFloat imageWidth = image.size.width * image.scale * 72 / resolution;
+    CGFloat imageHeight = image.size.height * image.scale * 72 / resolution;
     
-    double sx = imageWidth / boundsRect.size.width;
-    double sy = imageHeight / boundsRect.size.height;
+    CGFloat sx = imageWidth / boundsRect.size.width;
+    CGFloat sy = imageHeight / boundsRect.size.height;
     
     // At least one image edge is larger than maxBoundsRect
     if((sx > 1) || (sy > 1)){
-        double maxScale = sx > sy ? sx :sy;
+        CGFloat maxScale = sx > sy ? sx :sy;
         imageWidth = imageWidth / maxScale;
         imageHeight = imageHeight / maxScale;
     }
